@@ -6,7 +6,7 @@ Como um usuário da aplicação, eu quero realizar login com username e password
 Regras de Negócio
 - O sistema deve permitir cadastro de novo usuário com username e password.
 - Não pode haver duplicidade de username no sistema.
-- O password deve ser armazenado de forma criptografada (hash).
+- O password deve conter pelo menos 8 caracteres incluindo letras e números.
 - O sistema deve validar username e password no momento do login.
 - O sistema deve impedir acesso caso as credenciais estejam incorretas.
 - O usuário autenticado deve permanecer logado até realizar logout ou encerrar a sessão.
