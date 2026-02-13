@@ -33,5 +33,8 @@ jobs:
             echo "Aguardando API..."; sleep 2;
           done
 
+      - name: Definir BASE_URL para testes
+        run: echo "BASE_URL=http://localhost:3000" >> $GITHUB_ENV
+
       - name: Executar testes
         run: npm test
