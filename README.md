@@ -1,4 +1,44 @@
-1) Funcionalidade: Login de Usuário
+
+# Gestão de Treinos Academia API
+
+API REST para gestão de treinos, autenticação de usuários, marcação de treinos no calendário e métricas de desempenho.
+
+## Tecnologias
+- Node.js
+- Express
+- JWT (autenticação)
+- Swagger (documentação)
+
+## Arquitetura
+- **src/routes**: Rotas da API
+- **src/controllers**: Lógica dos endpoints
+- **src/services**: Regras de negócio
+- **src/models**: Modelos e banco em memória
+- **src/middleware**: Middlewares (ex: autenticação)
+- **resources/swagger.json**: Documentação Swagger
+
+## Como rodar
+1. Instale as dependências: `npm install express body-parser jsonwebtoken swagger-ui-express`
+2. Inicie a API: `node src/app.js`
+3. Acesse a documentação: [http://localhost:3000/api-docs](http://localhost:3000/api-docs)
+
+## Endpoints principais
+- `POST /api/users/register` — Cadastro de usuário
+- `POST /api/users/login` — Login (retorna JWT)
+- `POST /api/users/logout` — Logout
+- `GET /api/treinos/calendario?mes=2&ano=2026` — Listar treinos do mês
+- `POST /api/treinos/calendario` — Marcar treino `{ dia, mes, ano }`
+- `DELETE /api/treinos/calendario` — Desmarcar treino `{ dia, mes, ano }`
+- `GET /api/metricas` — Métricas do usuário
+- `POST /api/metricas/meta` — Definir meta anual `{ meta }`
+
+Consulte detalhes e exemplos no Swagger.
+
+---
+
+## Funcionalidades e Regras de Negócio
+
+### 1) Login de Usuário
 
 User Story
 Como um usuário da aplicação, eu quero realizar login com username e password, para que eu possa acessar e gerenciar meus treinos de forma segura durante o ano.
@@ -12,7 +52,8 @@ Regras de Negócio
 - O usuário autenticado deve permanecer logado até realizar logout ou encerrar a sessão.
 - O sistema deve permitir logout a qualquer momento.
 
-2) Funcionalidade: Marcação de Treinos no Calendário
+
+### 2) Marcação de Treinos no Calendário
 
 User Story
 Como um usuário autenticado, eu quero marcar no calendário os dias em que realizei treino, para que eu possa acompanhar minha frequência ao longo do ano.
@@ -26,7 +67,8 @@ Regras de Negócio
 - O sistema deve salvar o registro de treino vinculado ao usuário logado.
 - O sistema deve persistir os dados mesmo após logout.
 
-3) Funcionalidade: Métricas de Treinos Planejados x Realizados
+
+### 3) Métricas de Treinos Planejados x Realizados
 
 User Story
 Como um usuário autenticado, eu quero visualizar métricas comparando a quantidade de treinos planejados com os realizados, para que eu possa acompanhar meu desempenho ao longo do ano.

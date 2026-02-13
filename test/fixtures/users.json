@@ -1,0 +1,8 @@
+[
+  { "username": "testuser1", "password": "Test123456" },
+  { "username": "testuser2", "password": "Test654321" },
+  { "username": "testuser1", "password": "Test123456" },
+  { "username": "userinvalid", "password": "short" },
+  { "username": "naoexiste", "password": "Qualquer123" },
+  { "username": "testuser1", "password": "SenhaErrada123" }
+]
