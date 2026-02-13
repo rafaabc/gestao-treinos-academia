@@ -18,9 +18,30 @@ API REST para gestão de treinos, autenticação de usuários, marcação de tre
 - **resources/swagger.json**: Documentação Swagger
 
 ## Como rodar
-1. Instale as dependências: `npm install express body-parser jsonwebtoken swagger-ui-express`
-2. Inicie a API: `node src/app.js`
+1. Instale as dependências:
+	- `npm install`
+	- Para testes de performance, instale o k6 globalmente: `npm install -g k6`
+2. Inicie a API:
+	- `npm start` (ou `node src/app.js`)
 3. Acesse a documentação: [http://localhost:3000/api-docs](http://localhost:3000/api-docs)
+4. Execute os testes:
+	- Testes de API: `npm test`
+	- Testes de performance: `npm run k6:register`
+## Testes
+
+### Testes de API
+Os testes de API estão localizados na pasta `test/`. Para executá-los, utilize:
+```
+npm test
+```
+Os testes cobrem endpoints principais, regras de negócio e validações.
+
+### Testes de Performance (k6)
+Os testes de performance utilizam o k6. Instale o k6 globalmente (`npm install -g k6`).
+Os scripts estão em `test/k6/`. Para rodar um teste de performance, execute:
+```
+npm run k6:register
+```
 
 ## Endpoints principais
 - `POST /api/users/register` — Cadastro de usuário
@@ -38,7 +59,7 @@ Consulte detalhes e exemplos no Swagger.
 
 ## Funcionalidades e Regras de Negócio
 
-### 1) Login de Usuário
+### 1) Registro e Login de Usuário
 
 User Story
 Como um usuário da aplicação, eu quero realizar login com username e password, para que eu possa acessar e gerenciar meus treinos de forma segura durante o ano.
