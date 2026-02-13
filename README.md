@@ -38,10 +38,11 @@ Os testes cobrem endpoints principais, regras de negócio e validações.
 
 ### Testes de Performance (k6)
 Os testes de performance utilizam o k6. Instale o k6 globalmente (`npm install -g k6`).
-Os scripts estão em `test/k6/`. Para rodar um teste de performance, execute:
+Os scripts estão em `performance/k6/`. Para rodar um teste de performance, execute:
 ```
 npm run k6:register
 ```
+Esses testes são destinados apenas para execução local e não são executados automaticamente na pipeline CI/CD.
 
 ## Endpoints principais
 - `POST /api/users/register` — Cadastro de usuário
