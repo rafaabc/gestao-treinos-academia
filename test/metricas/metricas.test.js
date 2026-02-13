@@ -41,7 +41,7 @@ describe('RU-3: Métricas de Treinos Planejados x Realizados', function () {
       .set('Authorization', `Bearer ${token}`)
       .send(meta);
     expect(res.status).to.equal(400);
-  });
+  });//aqui meu teste pegou um bug pois esperava que falhasse mas a aplicação permite cadastrar metas com valores negativos e zero.
 
   it('3 | Calcular total de treinos realizados no mês atual', async function () {
     const user = { username: randomUsername('met3'), password: validPassword() };

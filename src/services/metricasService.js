@@ -16,5 +16,8 @@ exports.getMetricas = (username) => {
 
 exports.setMeta = (username, meta) => {
   if (!users[username]) throw new Error('Usuário não encontrado');
+  if (typeof meta !== 'number' || meta <= 0) {
+    throw new Error('Meta anual deve ser um número maior que zero');
+  }
   users[username].meta = meta;
 };
