@@ -1,4 +1,6 @@
 
+[![CI - API Tests](https://github.com/rafaabc/gestao-treinos-academia/actions/workflows/ci.yml/badge.svg)](https://github.com/rafaabc/gestao-treinos-academia/actions/workflows/ci.yml)
+
 # API Workout Manager
 
 REST API for managing workouts, user authentication, scheduling workouts on the calendar, and metrics.
