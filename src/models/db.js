@@ -1,5 +1,5 @@
-// Banco de dados em memória
+// In-memory database
 module.exports = {
-  users: {}, // { username: { username, password, meta } }
-  treinos: {} // { username: [ { dia, mes, ano } ] }
+  users: {}, // { username: { username, password, goal } }
+  workouts: {} // { username: [ { day, month, year } ] }
 };

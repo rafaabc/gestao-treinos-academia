@@ -21,6 +21,5 @@ exports.login = (req, res) => {
 };
 
 exports.logout = (req, res) => {
-  // Stateless JWT: logout is client-side (just discard token)
-  res.status(200).json({ message: 'Logout realizado com sucesso' });
+  res.status(200).json({ message: 'Success Logout' });
 };

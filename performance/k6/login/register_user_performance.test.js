@@ -12,11 +12,9 @@ export const options = {
 
 export default function randomUsername() {
   const uniqueUsername = `user_${__VU}_${__ITER}_${Date.now()}`;
-  // Gera uma senha aleatória de 8+ caracteres, com letras e números
   const randomNum = Math.floor(Math.random() * 1e8);
-  const randomStr = Math.random().toString(36).slice(2, 6); // 4 letras
+  const randomStr = Math.random().toString(36).slice(2, 6);
   const password = `Senha${randomStr}${randomNum}`;
-  // Garante que a senha tenha pelo menos 8 caracteres, letras e números
   const payload = JSON.stringify({
     username: uniqueUsername,
     password,
@@ -34,7 +32,7 @@ export default function randomUsername() {
       'status is 200 or 201': (r) => {
         const ok = r.status === 200 || r.status === 201;
         if (!ok) {
-          console.log(`Falha: status=${r.status}, body=${r.body}`);
+          console.log(`Failure: status=${r.status}, body=${r.body}`);
         }
         return ok;
       },

@@ -4,79 +4,78 @@ const chai = require("chai");
 const expect = chai.expect;
 const baseURL = process.env.BASE_URL;
 
-// Função para gerar username e senha válidos
 function randomUsername(prefix = "user") {
   return `${prefix}_${Math.random().toString(36).substring(2, 10)}`;
 }
 function validPassword() {
-  return "Senha" + Math.floor(Math.random() * 100000);
+  return "Password" + Math.floor(Math.random() * 100000);
 }
-function randomDia() {
+function randomDay() {
   return Math.floor(Math.random() * 27) + 1; // 1 a 28
 }
 
-let token, user, treino1, treino2;
+let token, user, workout1, workout2;
 
-describe("RU-2: Marcação de Treinos no Calendário", function () {
-  it("5 | Marcar treino em um dia válido", async function () {
+describe("UR-2: Set workouts in the calendar", function () {
+  it("5 | Set workout in a valid day", async function () {
     const user = { username: randomUsername("cal"), password: validPassword() };
     await request(baseURL).post("/api/users/register").send(user);
     const resLogin = await request(baseURL).post("/api/users/login").send(user);
     const token = resLogin.body.token;
-    const treino = { dia: randomDia(), mes: 2, ano: 2026 };
+    const workout = { day: randomDay(), month: 2, year: 2026 };
     const res = await request(baseURL)
-      .post("/api/treinos/calendario")
+      .post("/api/workouts/calendar")
       .set("Authorization", `Bearer ${token}`)
-      .send(treino);
+      .send(workout);
     expect([200, 201]).to.include(res.status);
     expect(res.body).to.have.property("message");
   });
 
-  it("6 | Desmarcar treino previamente registrado", async function () {
+  it("6 | Unset workout registered previously", async function () {
     const user = { username: randomUsername("cal"), password: validPassword() };
     await request(baseURL).post("/api/users/register").send(user);
     const resLogin = await request(baseURL).post("/api/users/login").send(user);
     const token = resLogin.body.token;
-    const treino = { dia: randomDia(), mes: 2, ano: 2026 };
+    const workout = { day: randomDay(), month: 2, year: 2026 };
     await request(baseURL)
-      .post("/api/treinos/calendario")
+      .post("/api/workouts/calendar")
       .set("Authorization", `Bearer ${token}`)
-      .send(treino);
+      .send(workout);
     const res = await request(baseURL)
-      .delete("/api/treinos/calendario")
+      .delete("/api/workouts/calendar")
       .set("Authorization", `Bearer ${token}`)
-      .send(treino);
+      .send(workout);
     expect(res.status).to.equal(200);
     expect(res.body).to.have.property("message");
   });
 
-  it("7 | Marcar treino em dia já registrado", async function () {
+  it("7 | Set workout in a day that already has a workout set", async function () {
     const user = { username: randomUsername("cal"), password: validPassword() };
     await request(baseURL).post("/api/users/register").send(user);
     const resLogin = await request(baseURL).post("/api/users/login").send(user);
     const token = resLogin.body.token;
-    const treino = { dia: randomDia(), mes: 2, ano: 2026 };
+    const workout = { day: randomDay(), month: 2, year: 2026 };
     await request(baseURL)
-      .post("/api/treinos/calendario")
+      .post("/api/workouts/calendar")
       .set("Authorization", `Bearer ${token}`)
-      .send(treino);
+      .send(workout);
     const res = await request(baseURL)
-      .post("/api/treinos/calendario")
+      .post("/api/workouts/calendar")
       .set("Authorization", `Bearer ${token}`)
-      .send(treino);
+      .send(workout);
     expect([400]).to.include(res.status);
   });
 
-  it("9 | Persistência dos dados após logout e novo login", async function () {
+  it("9 | Data persistence after logout and new login", async function () {
     const user = { username: randomUsername("cal"), password: validPassword() };
     await request(baseURL).post("/api/users/register").send(user);
     const resLogin = await request(baseURL).post("/api/users/login").send(user);
     const token = resLogin.body.token;
-    const treino = { dia: randomDia(), mes: 2, ano: 2026 };
+    const workout = { day: randomDay(), month: 2, year: 2026 };
     await request(baseURL)
-      .post("/api/treinos/calendario")
+      .post("/api/workouts/calendar")
       .set("Authorization", `Bearer ${token}`)
-      .send(treino);
+      .send(workout);
     // Logout
     await request(baseURL)
       .post("/api/users/logout")
@@ -86,16 +85,15 @@ describe("RU-2: Marcação de Treinos no Calendário", function () {
       .post("/api/users/login")
       .send(user);
     const newToken = resLogin2.body.token;
-    // Verificar treino
+    // Verificar workout
     const res = await request(baseURL)
-      .get(`/api/treinos/calendario?mes=${treino.mes}&ano=${treino.ano}`)
+      .get(`/api/workouts/calendar?month=${workout.month}&year=${workout.year}`)
       .set("Authorization", `Bearer ${newToken}`);
     expect(res.status).to.equal(200);
-    expect(res.body.some((t) => t.dia === treino.dia)).to.be.true;
+    expect(res.body.some((t) => t.day === workout.day)).to.be.true;
   });
 
-  it("10 | Registro de treino vinculado ao usuário autenticado", async function () {
-    // Cria dois usuários
+  it("10 | Workout registration linked to authenticated user", async function () {
     const user1 = {
       username: randomUsername("cal1"),
       password: validPassword(),
@@ -114,17 +112,16 @@ describe("RU-2: Marcação de Treinos no Calendário", function () {
       .send(user2);
     const token1 = resLogin1.body.token;
     const token2 = resLogin2.body.token;
-    const treino = { dia: randomDia(), mes: 2, ano: 2026 };
+    const workout = { day: randomDay(), month: 2, year: 2026 };
     await request(baseURL)
-      .post("/api/treinos/calendario")
+      .post("/api/workouts/calendar")
       .set("Authorization", `Bearer ${token2}`)
-      .send(treino);
-    // Verificar que user1 não vê treino de user2
+      .send(workout);
     const res = await request(baseURL)
-      .get(`/api/treinos/calendario?mes=${treino.mes}&ano=${treino.ano}`)
+      .get(`/api/workouts/calendar?month=${workout.month}&year=${workout.year}`)
       .set("Authorization", `Bearer ${token1}`);
     expect(res.status).to.equal(200);
-    expect(res.body.filter((t) => t.dia === treino.dia).length).to.be.at.most(
+    expect(res.body.filter((t) => t.day === workout.day).length).to.be.at.most(
       1,
     );
   });
