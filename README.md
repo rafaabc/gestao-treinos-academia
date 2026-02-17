@@ -1,104 +1,104 @@
 
-# Gestão de Treinos Academia API
+# API Workout Manager
 
-API REST para gestão de treinos, autenticação de usuários, marcação de treinos no calendário e métricas de desempenho.
+REST API for managing workouts, user authentication, scheduling workouts on the calendar, and metrics.
 
-## Tecnologias
+## Technologies
 - Node.js
 - Express
-- JWT (autenticação)
-- Swagger (documentação)
+- JWT (authentication)
+- Swagger (documentation)
 
-## Arquitetura
-- **src/routes**: Rotas da API
-- **src/controllers**: Lógica dos endpoints
-- **src/services**: Regras de negócio
-- **src/models**: Modelos e banco em memória
-- **src/middleware**: Middlewares (ex: autenticação)
-- **resources/swagger.json**: Documentação Swagger
+## Architecture
+- **src/routes**: API routes
+- **src/controllers**: Endpoint logic
+- **src/services**: Business rules
+- **src/models**: Models and in-memory database
+- **src/middleware**: Middlewares (e.g., authentication)
+- **resources/swagger.json**: Swagger documentation
+- **performance/**: Performance test scripts (k6)
+- **test/**: API tests scripts (Mocha, Chai, Supertest)
 
-## Como rodar
-1. Instale as dependências:
+## How to run
+1. Install dependencies:
 	- `npm install`
-	- Para testes de performance, instale o k6 globalmente: `npm install -g k6`
-2. Inicie a API:
-	- `npm start` (ou `node src/app.js`)
-3. Acesse a documentação: [http://localhost:3000/api-docs](http://localhost:3000/api-docs)
-4. Execute os testes:
-	- Testes de API: `npm test`
-	- Testes de performance: `npm run k6:register`
-## Testes
+	- For performance tests, install k6 globally: `npm install -g k6`
+2. Start the API:
+	- `npm start` (or `node src/app.js`)
+3. Access the documentation: [http://localhost:3000/api-docs](http://localhost:3000/api-docs)
+4. Run the tests:
+	- API tests: `npm test`
+	- Performance tests: `npm run k6:register`
+## Tests
 
-### Testes de API
-Os testes de API estão localizados na pasta `test/`. Para executá-los, utilize:
+### API Tests
+API tests are located in the `test/` folder. To run them, use:
 ```
 npm test
 ```
-Os testes cobrem endpoints principais, regras de negócio e validações.
+The tests cover main endpoints, business rules, and validations.
 
-### Testes de Performance (k6)
-Os testes de performance utilizam o k6. Instale o k6 globalmente (`npm install -g k6`).
-Os scripts estão em `performance/k6/`. Para rodar um teste de performance, execute:
+### Performance Tests (k6)
+Performance tests use k6. Install k6 globally (`npm install -g k6`).
+The scripts are in `performance/k6/`. To run a performance test, execute:
 ```
 npm run k6:register
 ```
-Esses testes são destinados apenas para execução local e não são executados automaticamente na pipeline CI/CD.
+These tests are intended for local execution only and are not automatically run in the CI/CD pipeline.
 
-## Endpoints principais
-- `POST /api/users/register` — Cadastro de usuário
-- `POST /api/users/login` — Login (retorna JWT)
+## Main Endpoints
+- `POST /api/users/register` — User registration
+- `POST /api/users/login` — Login (returns JWT)
 - `POST /api/users/logout` — Logout
-- `GET /api/treinos/calendario?mes=2&ano=2026` — Listar treinos do mês
-- `POST /api/treinos/calendario` — Marcar treino `{ dia, mes, ano }`
-- `DELETE /api/treinos/calendario` — Desmarcar treino `{ dia, mes, ano }`
-- `GET /api/metricas` — Métricas do usuário
-- `POST /api/metricas/meta` — Definir meta anual `{ meta }`
+- `GET /api/workouts/calendar?month=2&year=2026` — List workouts
+- `POST /api/workouts/calendar` — Schedule workout `{ day, month, year }`
+- `DELETE /api/workouts/calendar` — Unschedule workout `{ day, month, year }`
+- `GET /api/metrics` — User metrics
+- `POST /api/metrics/goal` — Set annual goal `{ goal }`
 
-Consulte detalhes e exemplos no Swagger.
+See details and examples in Swagger.
 
----
+## Features and Business Rules
 
-## Funcionalidades e Regras de Negócio
-
-### 1) Registro e Login de Usuário
+### 1) User Registration and Login
 
 User Story
-Como um usuário da aplicação, eu quero realizar login com username e password, para que eu possa acessar e gerenciar meus treinos de forma segura durante o ano.
+As an application user, I want to log in with a username and password so that I can securely access and manage my workouts throughout the year.
 
-Regras de Negócio
-- O sistema deve permitir cadastro de novo usuário com username e password.
-- Não pode haver duplicidade de username no sistema.
-- O password deve conter pelo menos 8 caracteres incluindo letras e números.
-- O sistema deve validar username e password no momento do login.
-- O sistema deve impedir acesso caso as credenciais estejam incorretas.
-- O usuário autenticado deve permanecer logado até realizar logout ou encerrar a sessão.
-- O sistema deve permitir logout a qualquer momento.
-
-
-### 2) Marcação de Treinos no Calendário
-
-User Story
-Como um usuário autenticado, eu quero marcar no calendário os dias em que realizei treino, para que eu possa acompanhar minha frequência ao longo do ano.
-
-Regras de Negócio
-- O usuário deve estar autenticado para acessar o calendário.
-- O calendário deve exibir o mês atual, com opção de navegar para mês anterior e seguinte.
-- Ao clicar em um dia, o sistema deve permitir marcar ou desmarcar o treino realizado.
-- Um dia marcado deve ser visualmente destacado (ex: cor verde).
-- O sistema deve permitir apenas um registro de treino por dia por usuário.
-- O sistema deve salvar o registro de treino vinculado ao usuário logado.
-- O sistema deve persistir os dados mesmo após logout.
+Business Rules
+- The system must allow registration of a new user with username and password.
+- There must be no duplicate usernames in the system.
+- The password must contain at least 8 characters, including letters and numbers.
+- The system must validate username and password at login.
+- The system must deny access if the credentials are incorrect.
+- The authenticated user must remain logged in until they log out or end the session.
+- The system must allow logout at any time.
 
 
-### 3) Métricas de Treinos Planejados x Realizados
+### 2) Scheduling Workouts on the Calendar
 
 User Story
-Como um usuário autenticado, eu quero visualizar métricas comparando a quantidade de treinos planejados com os realizados, para que eu possa acompanhar meu desempenho ao longo do ano.
+As an authenticated user, I want to mark on the calendar the days I worked out so that I can track my attendance throughout the year.
 
-Regras de Negócio
-- O sistema deve permitir definir uma meta anual de treinos (ex: 200 treinos).
-- O sistema deve calcular automaticamente a quantidade total de treinos realizados no mês e no ano.
-- O sistema deve exibir a porcentagem de treinos realizados em relação à meta anual.
-- O sistema deve exibir o total de treinos realizados no mês atual.
-- O sistema deve atualizar as métricas automaticamente ao marcar ou desmarcar um treino.
-- As métricas devem considerar apenas os treinos do usuário autenticado.
+Business Rules
+- The user must be authenticated to access the calendar.
+- The calendar must display the current month, with the option to navigate to the previous and next months.
+- By clicking on a day, the system must allow marking or unmarking the workout performed.
+- A marked day must be visually highlighted (e.g., green color).
+- The system must allow only one workout record per day per user.
+- The system must save the workout record linked to the logged-in user.
+- The system must persist the data even after logout.
+
+
+### 3) Planned vs. Completed Workouts Metrics
+
+User Story
+As an authenticated user, I want to view metrics comparing the number of planned workouts with those completed so that I can track my performance throughout the year.
+
+Business Rules
+- The system must allow setting an annual workout goal (e.g., 200 workouts).
+- The system must automatically calculate the total number of workouts completed in the month and year.
+- The system must display the percentage of workouts completed in relation to the annual goal.
+- The system must display the total workouts completed in the current month.
+- The system must update the metrics automatically when marking or unmarking a workout.
+- The metrics must consider only the workouts of the authenticated user.
