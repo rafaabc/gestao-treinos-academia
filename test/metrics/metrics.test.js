@@ -4,175 +4,174 @@ const chai = require('chai');
 const expect = chai.expect;
 const baseURL = process.env.BASE_URL;
 
-// Funções utilitárias
 function randomUsername(prefix = 'met') {
   return `${prefix}_${Math.random().toString(36).substring(2, 10)}`;
 }
 function validPassword() {
-  return 'Senha' + Math.floor(Math.random() * 100000);
+  return 'Password' + Math.floor(Math.random() * 100000);
 }
-function randomDia() {
+function randomDay() {
   return Math.floor(Math.random() * 27) + 1; // 1 a 28
 }
 
-describe('RU-3: Métricas de Treinos Planejados x Realizados', function () {
-  it('1 | Definir meta anual válida de treinos', async function () {
+describe('UR-3: Metrics for Planned vs. Actual Workouts', function () {
+  it('1 | Set a valid annual workout goal.', async function () {
     const user = { username: randomUsername('met1'), password: validPassword() };
     await request(baseURL).post('/api/users/register').send(user);
     const resLogin = await request(baseURL).post('/api/users/login').send(user);
     const token = resLogin.body.token;
-    const meta = { meta: 100 };
+    const goal = { goal: 100 };
     const res = await request(baseURL)
-      .post('/api/metricas/meta')
+      .post('/api/metrics/goal')
       .set('Authorization', `Bearer ${token}`)
-      .send(meta);
+      .send(goal);
     expect(res.status).to.equal(200);
     expect(res.body).to.have.property('message');
-  });//ainda falta asserção de que a meta é igual a 200
+  });
 
-  it('2 | Definir meta anual com valor inválido', async function () {
+  it('2 | Set an invalid annual goal', async function () {
     const user = { username: randomUsername('met2'), password: validPassword() };
     await request(baseURL).post('/api/users/register').send(user);
     const resLogin = await request(baseURL).post('/api/users/login').send(user);
     const token = resLogin.body.token;
-    const meta = { meta: -10 };
+    const goal = { goal: -10 };
     const res = await request(baseURL)
-      .post('/api/metricas/meta')
+      .post('/api/metrics/goal')
       .set('Authorization', `Bearer ${token}`)
-      .send(meta);
+      .send(goal);
     expect(res.status).to.equal(400);
-  });//aqui meu teste pegou um bug pois esperava que falhasse mas a aplicação permite cadastrar metas com valores negativos e zero.
+  });
 
-  it('3 | Calcular total de treinos realizados no mês atual', async function () {
+  it('3 | Calculate the total number of workouts completed in the current month', async function () {
     const user = { username: randomUsername('met3'), password: validPassword() };
     await request(baseURL).post('/api/users/register').send(user);
     const resLogin = await request(baseURL).post('/api/users/login').send(user);
     const token = resLogin.body.token;
     await request(baseURL)
-      .post('/api/metricas/meta')
+      .post('/api/metrics/goal')
       .set('Authorization', `Bearer ${token}`)
-      .send({ meta: 200 });
-    const treino = { dia: randomDia(), mes: 2, ano: 2026 };
+      .send({ goal: 200 });
+    const workout = { day: randomDay(), month: 2, year: 2026 };
     await request(baseURL)
-      .post('/api/treinos/calendario')
+      .post('/api/workouts/calendar')
       .set('Authorization', `Bearer ${token}`)
-      .send(treino);
+      .send(workout);
     const res = await request(baseURL)
-      .get('/api/metricas')
+      .get('/api/metrics')
       .set('Authorization', `Bearer ${token}`);
     expect(res.status).to.equal(200);
-    expect(res.body).to.have.property('totalMes');
-    expect(res.body.totalMes).to.equal(1);
+    expect(res.body).to.have.property('totalMonth');
+    expect(res.body.totalMonth).to.equal(1);
+    
   });
 
-  it('4 | Calcular total de treinos realizados no ano', async function () {
+  it('4 | Calculate total workouts completed in the year', async function () {
     const user = { username: randomUsername('met4'), password: validPassword() };
     await request(baseURL).post('/api/users/register').send(user);
     const resLogin = await request(baseURL).post('/api/users/login').send(user);
     const token = resLogin.body.token;
     await request(baseURL)
-      .post('/api/metricas/meta')
+      .post('/api/metrics/goal')
       .set('Authorization', `Bearer ${token}`)
-      .send({ meta: 200 });
-    const treino = { dia: randomDia(), mes: 2, ano: 2026 };
+      .send({ goal: 200 });
+    const workout = { day: randomDay(), month: 2, year: 2026 };
     await request(baseURL)
-      .post('/api/treinos/calendario')
+      .post('/api/workouts/calendar')
       .set('Authorization', `Bearer ${token}`)
-      .send(treino);
+      .send(workout);
     const res = await request(baseURL)
-      .get('/api/metricas')
+      .get('/api/metrics')
       .set('Authorization', `Bearer ${token}`);
     expect(res.status).to.equal(200);
-    expect(res.body).to.have.property('totalAno');
-    expect(res.body.totalAno).to.equal(1);
+    expect(res.body).to.have.property('totalYear');
+    expect(res.body.totalYear).to.equal(1);
   });
 
-  it('5 | Calcular percentual de treinos realizados em relação à meta anual', async function () {
+  it('5 | Calculate the percentage of workouts completed in relation to the annual goal', async function () {
     const user = { username: randomUsername('met5'), password: validPassword() };
     await request(baseURL).post('/api/users/register').send(user);
     const resLogin = await request(baseURL).post('/api/users/login').send(user);
     const token = resLogin.body.token;
     await request(baseURL)
-      .post('/api/metricas/meta')
+      .post('/api/metrics/goal')
       .set('Authorization', `Bearer ${token}`)
-      .send({ meta: 200 });
-    const treino = { dia: randomDia(), mes: 2, ano: 2026 };
+      .send({ goal: 200 });
+    const workout = { day: randomDay(), month: 2, year: 2026 };
     await request(baseURL)
-      .post('/api/treinos/calendario')
+      .post('/api/workouts/calendar')
       .set('Authorization', `Bearer ${token}`)
-      .send(treino);
+      .send(workout);
     const res = await request(baseURL)
-      .get('/api/metricas')
+      .get('/api/metrics')
       .set('Authorization', `Bearer ${token}`);
     expect(res.status).to.equal(200);
-    expect(res.body).to.have.property('porcentagem');
-    expect(res.body.porcentagem).to.equal(Math.floor((1/100)*100));
+    expect(res.body).to.have.property('percentage');
+    expect(res.body.percentage).to.equal(Math.floor((1/100)*100));
   });
 
-  it('6 | Atualizar métricas ao marcar treino', async function () {
+  it('6 | Update metrics when setting a workout', async function () {
     const user = { username: randomUsername('met6'), password: validPassword() };
     await request(baseURL).post('/api/users/register').send(user);
     const resLogin = await request(baseURL).post('/api/users/login').send(user);
     const token = resLogin.body.token;
     await request(baseURL)
-      .post('/api/metricas/meta')
+      .post('/api/metrics/goal')
       .set('Authorization', `Bearer ${token}`)
-      .send({ meta: 100 });
-    const treino1 = { dia: randomDia(), mes: 2, ano: 2026 };
-    const treino2 = { dia: treino1.dia === 28 ? 27 : treino1.dia + 1, mes: 2, ano: 2026 };
+      .send({ goal: 100 });
+    const workout1 = { day: randomDay(), month: 2, year: 2026 };
+    const workout2 = { day: workout1.day === 28 ? 27 : workout1.day + 1, month: 2, year: 2026 };
     await request(baseURL)
-      .post('/api/treinos/calendario')
+      .post('/api/workouts/calendar')
       .set('Authorization', `Bearer ${token}`)
-      .send(treino1);
+      .send(workout1);
     await request(baseURL)
-      .post('/api/treinos/calendario')
+      .post('/api/workouts/calendar')
       .set('Authorization', `Bearer ${token}`)
-      .send(treino2);
+      .send(workout2);
     const res = await request(baseURL)
-      .get('/api/metricas')
+      .get('/api/metrics')
       .set('Authorization', `Bearer ${token}`);
     expect(res.status).to.equal(200);
-    expect(res.body.totalMes).to.equal(2);
-    expect(res.body.totalAno).to.equal(2);
-    expect(res.body.porcentagem).to.equal(Math.floor((2/100)*100));
+    expect(res.body.totalMonth).to.equal(2);
+    expect(res.body.totalYear).to.equal(2);
+    expect(res.body.percentage).to.equal(Math.floor((2/100)*100));
   });
 
-  it('7 | Atualizar métricas ao desmarcar treino', async function () {
+  it('7 | Update metrics when unsetting a workout', async function () {
     const user = { username: randomUsername('met7'), password: validPassword() };
     await request(baseURL).post('/api/users/register').send(user);
     const resLogin = await request(baseURL).post('/api/users/login').send(user);
     const token = resLogin.body.token;
     await request(baseURL)
-      .post('/api/metricas/meta')
+      .post('/api/metrics/goal')
       .set('Authorization', `Bearer ${token}`)
-      .send({ meta: 200 });
-    const treino1 = { dia: randomDia(), mes: 2, ano: 2026 };
-    const treino2 = { dia: treino1.dia === 28 ? 27 : treino1.dia + 1, mes: 2, ano: 2026 };
+      .send({ goal: 200 });
+    const workout1 = { day: randomDay(), month: 2, year: 2026 };
+    const workout2 = { day: workout1.day === 28 ? 27 : workout1.day + 1, month: 2, year: 2026 };
     await request(baseURL)
-      .post('/api/treinos/calendario')
+      .post('/api/workouts/calendar')
       .set('Authorization', `Bearer ${token}`)
-      .send(treino1);
+      .send(workout1);
     await request(baseURL)
-      .post('/api/treinos/calendario')
+      .post('/api/workouts/calendar')
       .set('Authorization', `Bearer ${token}`)
-      .send(treino2);
-    // Desmarcar treino2
+      .send(workout2);
     await request(baseURL)
-      .delete('/api/treinos/calendario')
+      .delete('/api/workouts/calendar')
       .set('Authorization', `Bearer ${token}`)
-      .send(treino2);
+      .send(workout2);
     const res = await request(baseURL)
-      .get('/api/metricas')
+      .get('/api/metrics')
       .set('Authorization', `Bearer ${token}`);
     expect(res.status).to.equal(200);
-    expect(res.body.totalMes).to.equal(1);
-    expect(res.body.totalAno).to.equal(1);
-    expect(res.body.porcentagem).to.equal(Math.floor((1/100)*100));
+    expect(res.body.totalMonth).to.equal(1);
+    expect(res.body.totalYear).to.equal(1);
+    expect(res.body.percentage).to.equal(Math.floor((1/100)*100));
   });
 
-  it('8 | Exibir métricas apenas para usuário autenticado', async function () {
+  it('8 | Display metrics only for authenticated users', async function () {
     const res = await request(baseURL)
-      .get('/api/metricas');
+      .get('/api/metrics');
     expect(res.status).to.equal(401);
   });
 });

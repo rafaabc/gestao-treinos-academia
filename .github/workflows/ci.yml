@@ -1,4 +1,4 @@
-name: CI - Testes API
+name: CI - API Tests
 
 on:
   pull_request:
@@ -10,31 +10,31 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout código
+      - name: Code Checkout
         uses: actions/checkout@v4
 
-      - name: Instalar Node.js
+      - name: Install Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20.x'
 
-      - name: Instalar dependências
+      - name: Install dependencies
         run: npm install
 
-      - name: Iniciar API em background
+      - name: Run API
         run: npm start &
 
-      - name: Aguardar API subir
+      - name: Wait API start up
         run: |
           for i in {1..20}; do
             if nc -z localhost 3000; then
               echo "API está de pé"; break;
             fi
-            echo "Aguardando API..."; sleep 2;
+            echo "Awaiting API..."; sleep 2;
           done
 
-      - name: Definir BASE_URL para testes
+      - name: Define BASE_URL for tests
         run: echo "BASE_URL=http://localhost:3000" >> $GITHUB_ENV
 
-      - name: Executar testes
+      - name: Run tests
         run: npm test

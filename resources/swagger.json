@@ -1,9 +1,9 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "Gestão de Treinos Academia API",
+    "title": "API Workout Manager",
     "version": "1.0.0",
-    "description": "API para gestão de treinos, autenticação de usuários, marcação de treinos no calendário e métricas."
+    "description": "API for managing workouts, user authentication, scheduling workouts on the calendar, and metrics."
   },
   "servers": [
     { "url": "http://localhost:3000" }
@@ -29,25 +29,25 @@
           "token": { "type": "string" }
         }
       },
-      "Treino": {
+      "Workout": {
         "type": "object",
         "properties": {
-          "dia": { "type": "integer" },
-          "mes": { "type": "integer" },
-          "ano": { "type": "integer" }
+          "day": { "type": "integer" },
+          "month": { "type": "integer" },
+          "year": { "type": "integer" }
         }
       },
-      "Calendario": {
+      "Calendar": {
         "type": "array",
-        "items": { "$ref": "#/components/schemas/Treino" }
+        "items": { "$ref": "#/components/schemas/Workout" }
       },
-      "Metricas": {
+      "Metrics": {
         "type": "object",
         "properties": {
-          "meta": { "type": "integer" },
-          "totalAno": { "type": "integer" },
-          "totalMes": { "type": "integer" },
-          "porcentagem": { "type": "integer" }
+          "goal": { "type": "integer" },
+          "totalYear": { "type": "integer" },
+          "totalMonth": { "type": "integer" },
+          "percentage": { "type": "integer" }
         }
       },
       "Error": {
@@ -64,7 +64,7 @@
   "paths": {
     "/api/users/register": {
       "post": {
-        "summary": "Registrar novo usuário",
+        "summary": "Register new user",
         "requestBody": {
           "required": true,
           "content": {
@@ -81,14 +81,14 @@
           }
         },
         "responses": {
-          "201": { "description": "Usuário criado", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/User" } } } },
-          "400": { "description": "Erro de validação", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } }
+          "201": { "description": "User created", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/User" } } } },
+          "400": { "description": "Validation error", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } }
         }
       }
     },
     "/api/users/login": {
       "post": {
-        "summary": "Login de usuário",
+        "summary": "Login",
         "requestBody": {
           "required": true,
           "content": {
@@ -105,35 +105,35 @@
           }
         },
         "responses": {
-          "200": { "description": "Login bem-sucedido", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/LoginResponse" } } } },
-          "401": { "description": "Credenciais inválidas", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } }
+          "200": { "description": "Successful login", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/LoginResponse" } } } },
+          "401": { "description": "Invalid credentials", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } }
         }
       }
     },
     "/api/users/logout": {
       "post": {
-        "summary": "Logout do usuário",
+        "summary": "Logout",
         "responses": {
-          "200": { "description": "Logout realizado", "content": { "application/json": { "schema": { "type": "object", "properties": { "message": { "type": "string" } } } } } }
+          "200": { "description": "Successful logout", "content": { "application/json": { "schema": { "type": "object", "properties": { "message": { "type": "string" } } } } } }
         }
       }
     },
-    "/api/treinos/calendario": {
+    "/api/workouts/calendar": {
       "get": {
-        "summary": "Obter calendário de treinos",
+        "summary": "Get calendar of workouts",
         "parameters": [
-          { "name": "mes", "in": "query", "required": true, "schema": { "type": "integer" } },
-          { "name": "ano", "in": "query", "required": true, "schema": { "type": "integer" } }
+          { "name": "month", "in": "query", "required": true, "schema": { "type": "integer" } },
+          { "name": "year", "in": "query", "required": true, "schema": { "type": "integer" } }
         ],
         "responses": {
-          "200": { "description": "Lista de treinos", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Calendario" } } } },
-          "400": { "description": "Erro de requisição", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } },
-          "401": { "description": "Não autenticado", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } }
+          "200": { "description": "List of workouts", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Calendar" } } } },
+          "400": { "description": "Bad request", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } },
+          "401": { "description": "Not authenticated", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } }
         },
         "security": [ { "bearerAuth": [] } ]
       },
       "post": {
-        "summary": "Marcar treino no calendário",
+        "summary": "Set workout in calendar",
         "requestBody": {
           "required": true,
           "content": {
@@ -141,24 +141,24 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "dia": { "type": "integer" },
-                  "mes": { "type": "integer" },
-                  "ano": { "type": "integer" }
+                  "day": { "type": "integer" },
+                  "month": { "type": "integer" },
+                  "year": { "type": "integer" }
                 },
-                "required": ["dia", "mes", "ano"]
+                "required": ["day", "month", "year"]
               }
             }
           }
         },
         "responses": {
-          "201": { "description": "Treino marcado", "content": { "application/json": { "schema": { "type": "object", "properties": { "message": { "type": "string" } } } } } },
-          "400": { "description": "Erro de requisição", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } },
-          "401": { "description": "Não autenticado", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } }
+          "201": { "description": "Workout set", "content": { "application/json": { "schema": { "type": "object", "properties": { "message": { "type": "string" } } } } } },
+          "400": { "description": "Bad request", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } },
+          "401": { "description": "Not authenticated", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } }
         },
         "security": [ { "bearerAuth": [] } ]
       },
       "delete": {
-        "summary": "Desmarcar treino do calendário",
+        "summary": "Unset workout in calendar",
         "requestBody": {
           "required": true,
           "content": {
@@ -166,37 +166,37 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "dia": { "type": "integer" },
-                  "mes": { "type": "integer" },
-                  "ano": { "type": "integer" }
+                  "day": { "type": "integer" },
+                  "month": { "type": "integer" },
+                  "year": { "type": "integer" }
                 },
-                "required": ["dia", "mes", "ano"]
+                "required": ["day", "month", "year"]
               }
             }
           }
         },
         "responses": {
-          "200": { "description": "Treino desmarcado", "content": { "application/json": { "schema": { "type": "object", "properties": { "message": { "type": "string" } } } } } },
-          "400": { "description": "Erro de requisição", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } },
-          "401": { "description": "Não autenticado", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } }
+          "200": { "description": "Workout unset", "content": { "application/json": { "schema": { "type": "object", "properties": { "message": { "type": "string" } } } } } },
+          "400": { "description": "Bad request", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } },
+          "401": { "description": "Not authenticated", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } }
         },
         "security": [ { "bearerAuth": [] } ]
       }
     },
-    "/api/metricas": {
+    "/api/metrics": {
       "get": {
-        "summary": "Obter métricas de treinos",
+        "summary": "Get metrics of workouts",
         "responses": {
-          "200": { "description": "Métricas retornadas", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Metricas" } } } },
-          "400": { "description": "Erro de requisição", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } },
-          "401": { "description": "Não autenticado", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } }
+          "200": { "description": "Metrics retrieved", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Metrics" } } } },
+          "400": { "description": "Bad request", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } },
+          "401": { "description": "Not authenticated", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } }
         },
         "security": [ { "bearerAuth": [] } ]
       }
     },
-    "/api/metricas/meta": {
+    "/api/metrics/goal": {
       "post": {
-        "summary": "Definir meta anual de treinos",
+        "summary": "Set an annual training goal.",
         "requestBody": {
           "required": true,
           "content": {
@@ -204,17 +204,17 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "meta": { "type": "integer" }
+                  "goal": { "type": "integer" }
                 },
-                "required": ["meta"]
+                "required": ["goal"]
               }
             }
           }
         },
         "responses": {
-          "200": { "description": "Meta definida", "content": { "application/json": { "schema": { "type": "object", "properties": { "message": { "type": "string" } } } } } },
-          "400": { "description": "Erro de requisição", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } },
-          "401": { "description": "Não autenticado", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } }
+          "200": { "description": "Annual goal set", "content": { "application/json": { "schema": { "type": "object", "properties": { "message": { "type": "string" } } } } } },
+          "400": { "description": "Bad request", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } },
+          "401": { "description": "Not authenticated", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } }
         },
         "security": [ { "bearerAuth": [] } ]
       }

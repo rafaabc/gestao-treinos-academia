@@ -6,11 +6,11 @@ module.exports = function (req, res, next) {
     return next();
   }
   const authHeader = req.headers['authorization'];
-  if (!authHeader) return res.status(401).json({ error: 'Token não fornecido' });
+  if (!authHeader) return res.status(401).json({ error: 'Token not provide' });
   const token = authHeader.split(' ')[1];
-  if (!token) return res.status(401).json({ error: 'Token inválido' });
+  if (!token) return res.status(401).json({ error: 'Invalid Token' });
   jwt.verify(token, SECRET, (err, user) => {
-    if (err) return res.status(403).json({ error: 'Token inválido' });
+    if (err) return res.status(403).json({ error: 'Invalid Token' });
     req.user = user;
     next();
   });
