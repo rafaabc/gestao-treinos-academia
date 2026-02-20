@@ -1,8 +1,8 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const metricsController = require('../controllers/metricsController');
+import * as metricsController from '../controllers/metricsController.js';
 
 router.get('/', metricsController.getMetrics);
 router.post('/goal', metricsController.setGoal);
 
-module.exports = router;
+export default router;

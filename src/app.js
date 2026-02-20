@@ -1,11 +1,11 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const swaggerUi = require('swagger-ui-express');
-const swaggerDocument = require('../resources/swagger.json');
-const authMiddleware = require('./middleware/auth');
-const userRoutes = require('./routes/userRoutes');
-const workoutRoutes = require('./routes/workoutRoutes');
-const metricsRoutes = require('./routes/metricsRoutes');
+import express from 'express';
+import bodyParser from 'body-parser';
+import swaggerUi from 'swagger-ui-express';
+import swaggerDocument from '../resources/swagger.json' with { type: 'json' };
+import authMiddleware from './middleware/auth.js';
+import userRoutes from './routes/userRoutes.js';
+import workoutRoutes from './routes/workoutRoutes.js';
+import metricsRoutes from './routes/metricsRoutes.js';
 
 const app = express();
 app.use(bodyParser.json());

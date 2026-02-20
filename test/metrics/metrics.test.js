@@ -1,18 +1,9 @@
-require('dotenv').config();
-const request = require('supertest');
-const chai = require('chai');
-const expect = chai.expect;
+import 'dotenv/config';
+import request from 'supertest';
+import { expect } from 'chai';
 const baseURL = process.env.BASE_URL;
 
-function randomUsername(prefix = 'met') {
-  return `${prefix}_${Math.random().toString(36).substring(2, 10)}`;
-}
-function validPassword() {
-  return 'Password' + Math.floor(Math.random() * 100000);
-}
-function randomDay() {
-  return Math.floor(Math.random() * 27) + 1; // 1 a 28
-}
+import { randomUsername, validPassword, randomDay } from '../testUtils.js';
 
 describe('UR-3: Metrics for Planned vs. Actual Workouts', function () {
   it('1 | Set a valid annual workout goal.', async function () {

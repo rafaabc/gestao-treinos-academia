@@ -1,6 +1,6 @@
-const userService = require('../services/userService');
+import * as userService from '../services/userService.js';
 
-exports.register = (req, res) => {
+export function register(req, res) {
   const { username, password } = req.body;
   try {
     const user = userService.register(username, password);
@@ -8,9 +8,9 @@ exports.register = (req, res) => {
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
-};
+}
 
-exports.login = (req, res) => {
+export function login(req, res) {
   const { username, password } = req.body;
   try {
     const token = userService.login(username, password);
@@ -18,8 +18,8 @@ exports.login = (req, res) => {
   } catch (err) {
     res.status(401).json({ error: err.message });
   }
-};
+}
 
-exports.logout = (req, res) => {
+export function logout(req, res) {
   res.status(200).json({ message: 'Success Logout' });
-};
+}

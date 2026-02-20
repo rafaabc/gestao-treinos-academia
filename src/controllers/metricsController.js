@@ -1,15 +1,15 @@
-const metricsService = require('../services/metricsService');
+import * as metricsService from '../services/metricsService.js';
 
-exports.getMetrics = (req, res) => {
+export function getMetrics(req, res) {
   try {
     const metrics = metricsService.getMetrics(req.user.username);
     res.json(metrics);
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
-};
+}
 
-exports.setGoal = (req, res) => {
+export function setGoal(req, res) {
   try {
     const { goal } = req.body;
     metricsService.setGoal(req.user.username, goal);
@@ -17,4 +17,4 @@ exports.setGoal = (req, res) => {
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
-};
+}
