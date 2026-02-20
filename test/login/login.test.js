@@ -1,16 +1,9 @@
-require('dotenv').config();
-const request = require('supertest');
-const chai = require('chai');
-const expect = chai.expect;
+import 'dotenv/config';
+import request from 'supertest';
+import { expect } from 'chai';
 const baseURL = process.env.BASE_URL;
 
-function randomUsername(prefix = 'user') {
-  return `${prefix}_${Math.random().toString(36).substring(2, 10)}`;
-}
-
-function validPassword() {
-  return 'Password' + Math.floor(Math.random() * 100000);
-}
+import { randomUsername, validPassword } from '../testUtils.js';
 
 describe('UR-1: User Register and Login', function () {
   let validUser;

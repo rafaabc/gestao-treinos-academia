@@ -1,9 +1,9 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const workoutController = require('../controllers/workoutController');
+import * as workoutController from '../controllers/workoutController.js';
 
-router.get('/calendar', workoutController.getCalendar);
 router.post('/calendar', workoutController.setWorkout);
 router.delete('/calendar', workoutController.unsetWorkout);
+router.get('/calendar', workoutController.getCalendar);
 
-module.exports = router;
+export default router;

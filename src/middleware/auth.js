@@ -1,7 +1,7 @@
-const jwt = require('jsonwebtoken');
+import jwt from 'jsonwebtoken';
 const SECRET = 'supersecretkey';
 
-module.exports = function (req, res, next) {
+export default function (req, res, next) {
   if (req.path.startsWith('/api/users') || req.path.startsWith('/api/login') || req.path.startsWith('/api-docs')) {
     return next();
   }

@@ -1,7 +1,9 @@
 {
   "name": "gestao-treinos-academia",
   "version": "1.0.0",
+  "type": "module",
   "main": "src/app.js",
+  "engines": { "node": ">=21" },
   "scripts": {
     "start": "node src/app.js",
     "test": "mocha --config ./test/mocha.config.json",
